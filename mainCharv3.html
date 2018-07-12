@@ -1,0 +1,120 @@
+<canvas></canvas>
+<script>
+	let cx = document.querySelector("canvas").getContext("2d");
+	let char = document.createElement("img");
+	cx.canvas.width=window.innerWidth;
+	cx.canvas.height=window.innerHeight;
+	var width = cx.canvas.width;
+	var height = cx.canvas.height;
+	var charW = 50, charH = 50, posX = 0, posY= 400;
+	var startingY = posY;
+
+	//alert( cx.canvas.clientWidth );
+	//cx.fillRect(0, 0, cx.canvas.clientWidth, cx.canvas.clientHeight);
+	
+	cx.beginPath();
+	cx.fillRect(posX, posY, charW, charH);
+	cx.stroke();
+	cx.closePath();
+	//Make Ground
+	cx.beginPath();
+	cx.moveTo(0,posY+charH);
+	cx.lineTo(width, posY+charH);
+	cx.stroke();
+
+	var speedY = -10;
+	var time = 0;
+	var jumpHeight = 300;
+	var fps = 30;
+	var gravity = 0.2;
+	let running = true;
+	var myReq;
+	var lastKeyHeld;
+
+	document.addEventListener("keydown", move);
+	document.addEventListener("keyup", stopxDir); //trying to stop xDir
+	function bounce(timestamp) {
+		posY += speedY;
+		speedY += (time/10)*gravity;
+		time++;
+		if (posY > startingY) {
+			cancelAnimationFrame(myReq);
+			posY = startingY;
+			myReq = undefined;
+			time = 0;
+			speedY = -10;
+		}
+		else {
+			myReq = window.requestAnimationFrame(bounce);
+		}
+			//just remake how you calcualte the bounce movement
+
+		}
+
+		var x = 0;
+	//var perDir = 20; //how much each arrow keyMoves it
+	var runxDir = false;
+	var right;
+	var moveTimer;
+	function xDir() { //pos is a -1 or 1 depending on direction
+		if (runxDir) {
+			if (right) {
+				if (posX < width-charW) {
+					posX ++;
+				}
+					//setTimeout(()=>{moveTimer = window.requestAnimationFrame(xDir); }, 1000);
+					moveTimer = window.requestAnimationFrame(xDir);
+				}
+				else {
+					if (posX > 0) {
+					posX --;
+				}
+					moveTimer = window.requestAnimationFrame(xDir);
+				}
+			}
+		}
+
+		function move (e) {
+			let keyCode = e.keyCode;
+			lastKeyHeld = keyCode;
+	if (keyCode == 32) { //to Jump
+		window.requestAnimationFrame(bounce);
+	}
+	else if (keyCode == 39) {
+		runxDir = true;
+		right = true;
+		window.requestAnimationFrame(xDir); //breaks when released
+	}
+	else if (keyCode == 37) {
+		runxDir = true;
+		right = false;
+		window.requestAnimationFrame(xDir); //breaks when released
+	}
+}
+
+function stopxDir (e) {
+	if (lastKeyHeld == 39 || lastKeyHeld == 37) {
+		runxDir = false;
+	}
+}
+
+	function draw() { //Constantly running, draws the box every frame
+		//cx.clearRect(posX, posY+1, charW+10, charH+10); //quick way to fix clear right now
+		cx.clearRect(0,0,width,height);
+		cx.beginPath();
+		cx.fillRect(posX, posY, charW, charH);
+		cx.stroke();
+		cx.closePath();
+		window.requestAnimationFrame(draw);
+	}
+
+	draw();
+
+/* -use window or document.addEventListener to add eventListeners
+- we draw everything on a canvas
+-remember var is global, let is in scope
+*/
+</script>
+
+
+

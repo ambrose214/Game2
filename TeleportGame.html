@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<body> 
+
+</body>
+<link rel="stylesheet" href="TeleportGame.css">
+
+<script>
+
+	const scale = 20;
+
+	class Vec {
+		constructor(x, y) {
+			this.x = x;
+			this.y = y;
+		}
+		plus(other) {
+			return new Vec(this.x+other.x, this.y+other.y);
+		}
+		times(factor) {
+			return new Vec(this.x * factor, this.y * factor);
+		}
+	}
+
+	class Player {
+		constructor(pos,speed) {
+			this.pos = pos;
+			this.speed = speed;
+		}
+
+		static create(pos) {
+			return new Player(pos.plus(new Vec(0, 0)), new Vec(0,0));
+		}
+	}
+	Player.prototype.size = new Vec(0.8, 1.5);
+
+
+	function drawPlayer(player) {
+		//let rect = document.createElement(`${player}`);
+		let rect = document.createElement("player");
+		rect.style.width = `${player.size.x * scale}px`;
+		rect.style.height = `${player.size.y * scale}px`;
+		rect.style.left = `${player.pos.x * scale}px`;
+		rect.style.top = `${player.pos.y * scale}px`;
+	}
+
+	function setGame() {
+		var player1 = Player.create(new Vec(0,0));
+		drawPlayer(player1);
+	}
+
+
+	function elt(name, attrs, ...children) {
+		let dom = document.createElement(name);
+		for (let attr of Object.keys(attrs)) {
+			dom.setAttribute(attr, attrs[attr]);
+		}
+		for (let child of children) {
+			dom.appendChild(child);
+		}
+		return dom;
+	}
+
+	setGame();
+</script>
